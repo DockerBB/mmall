@@ -31,7 +31,7 @@ public class ProductManageController {
     @Autowired
     private IProductService iProductService;
 
-    @RequestMapping("save.do")
+    @RequestMapping(value = "save.do")
     @ResponseBody
     public ServerResponse saveOrUpdateProduct(HttpSession session,Product product){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
