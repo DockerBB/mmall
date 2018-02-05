@@ -1,0 +1,47 @@
+package com.mmall.controller.backend;
+
+import com.google.common.collect.Maps;
+import com.mmall.common.Const;
+import com.mmall.common.ResponseCode;
+import com.mmall.common.ServerResponse;
+import com.mmall.pojo.Product;
+import com.mmall.pojo.User;
+import com.mmall.service.IProductService;
+import com.mmall.service.IUserService;
+import com.mmall.util.PropertiesUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
+
+
+@Controller
+@RequestMapping("/manage/product")
+public class ProductManageController {
+
+    @Autowired
+    private IUserService iUserService;
+    @Autowired
+    private IProductService iProductService;
+
+    @RequestMapping("save.do")
+    @ResponseBody
+    public ServerResponse saveOrUpdateProduct(HttpSession session,Product product){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登陆");
+        }
+        if(iUserService.checkAdminRole(user).isSuccess()){
+            return iProductService.saveOrUpdateProduct(product);
+        }
+        return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
+    }
+}
+

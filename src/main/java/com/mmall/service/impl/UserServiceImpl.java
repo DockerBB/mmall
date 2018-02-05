@@ -13,9 +13,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
-/**
- * Created by geely
- */
+
 @Service("iUserService")
 public class UserServiceImpl implements IUserService {
 
@@ -85,7 +83,6 @@ public class UserServiceImpl implements IUserService {
 
         ServerResponse validResponse = this.checkValid(username, Const.USERNAME);
         if (validResponse.isSuccess()) {
-            //用户不存在
             return ServerResponse.createByErrorMessage("用户不存在");
         }
         String question = userMapper.selectQuestionByUsername(username);

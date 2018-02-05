@@ -19,7 +19,7 @@
     id, username, password, email, phone, question, answer, role, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from mmall_user
     where id = #{id,jdbcType=INTEGER}
@@ -65,12 +65,8 @@
       <if test="role != null" >
         role,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
+      create_time,
+      update_time,
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -97,20 +93,16 @@
       <if test="role != null" >
         #{role,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        now(),
-      </if>
-      <if test="updateTime != null" >
-        now(),
-      </if>
+      now(),
+      now(),
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.mmall.pojo.User" >
     update mmall_user
     <set >
-      <if test="username != null" >
-        username = #{username,jdbcType=VARCHAR},
-      </if>
+      <!--<if test="username != null" >-->
+      <!--username = #{username,jdbcType=VARCHAR},-->
+      <!--</if>-->
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},
       </if>
@@ -132,29 +124,36 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
-        now(),
-      </if>
+
+      update_time = now(),
+
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mmall.pojo.User" >
     update mmall_user
     set username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      question = #{question,jdbcType=VARCHAR},
-      answer = #{answer,jdbcType=VARCHAR},
-      role = #{role,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      now()
+    password = #{password,jdbcType=VARCHAR},
+    email = #{email,jdbcType=VARCHAR},
+    phone = #{phone,jdbcType=VARCHAR},
+    question = #{question,jdbcType=VARCHAR},
+    answer = #{answer,jdbcType=VARCHAR},
+    role = #{role,jdbcType=INTEGER},
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <select id="checkUsername" resultType="int" parameterType="string">
     SELECT count(1) from mmall_user
     WHERE username = #{username}
   </select>
+
+  <select id="checkEmail" resultType="int" parameterType="string">
+    SELECT count(1) from mmall_user
+    WHERE email = #{email}
+  </select>
+
   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
     SELECT
     <include refid="Base_Column_List"/>
@@ -162,32 +161,14 @@
     WHERE username = #{username}
     and password = #{password}
   </select>
-  <select id="checkEmail" resultType="int" parameterType="string">
-    SELECT count(1) from mmall_user
-    WHERE email = #{email}
-  </select>
+
   <select id="selectQuestionByUsername" resultType="string" parameterType="string">
     SELECT
     question
     FROM mmall_user
     WHERE username = #{username}
   </select>
-  <update id="updatePasswordByUsername" parameterType="map">
-    UPDATE mmall_user
-    SET password = #{passwordNew},update_time = now()
-    WHERE username = #{username}
-  </update>
-  <select id="checkPassword" resultType="int" parameterType="map">
-    SELECT count(1)
-    FROM mmall_user
-    WHERE id = #{userId}
-    AND password = #{password}
-  </select>
-  <select id="checkEmailByUserId" resultType="int" parameterType="map">
-    SELECT count(1) from mmall_user
-    WHERE email = #{email}
-    AND id != #{userId}
-  </select>
+
   <select id="checkAnswer" resultType="int" parameterType="map">
     SELECT count(1)
     FROM mmall_user
@@ -195,4 +176,24 @@
     AND question = #{question}
     AND answer = #{answer}
   </select>
+
+  <update id="updatePasswordByUsername" parameterType="map">
+    UPDATE mmall_user
+    SET password = #{passwordNew},update_time = now()
+    WHERE username = #{username}
+  </update>
+
+  <select id="checkPassword" resultType="int" parameterType="map">
+    SELECT count(1)
+    FROM mmall_user
+    WHERE id = #{userId}
+    AND password = #{password}
+  </select>
+
+  <select id="checkEmailByUserId" resultType="int" parameterType="map">
+    SELECT count(1) from mmall_user
+    WHERE email = #{email}
+    AND id != #{userId}
+  </select>
 </mapper>
+
