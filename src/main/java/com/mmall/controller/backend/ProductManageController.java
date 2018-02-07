@@ -6,6 +6,7 @@ import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Product;
 import com.mmall.pojo.User;
+import com.mmall.service.IFileService;
 import com.mmall.service.IProductService;
 import com.mmall.service.IUserService;
 import com.mmall.util.PropertiesUtil;
@@ -31,6 +32,8 @@ public class ProductManageController {
     private IUserService iUserService;
     @Autowired
     private IProductService iProductService;
+    @Autowired
+    private IFileService iFileService;
 
     @RequestMapping(value = "save.do")
     @ResponseBody
@@ -76,7 +79,7 @@ public class ProductManageController {
         return ServerResponse.createByErrorMessage("无权限操作");
     }
 
-    @RequestMapping("set_sale_status.do")
+    @RequestMapping(value = "set_sale_status.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse setSaleStatus(HttpSession session, Integer productId,Integer status){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
@@ -91,7 +94,7 @@ public class ProductManageController {
         }
     }
 
-    @RequestMapping("detail.do")
+    @RequestMapping(value = "detail.do",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse getDetail(HttpSession session, Integer productId){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
@@ -108,4 +111,24 @@ public class ProductManageController {
         }
     }
 
+    @RequestMapping("upload.do")
+    @ResponseBody
+    public ServerResponse upload(HttpSession session,@RequestParam(value = "upload_file",required = false) MultipartFile file,HttpServletRequest request){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录管理员");
+        }
+        if(iUserService.checkAdminRole(user).isSuccess()){
+            String path = request.getSession().getServletContext().getRealPath("upload");
+            String targetFileName = iFileService.upload(file,path);
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFileName;
+
+            Map fileMap = Maps.newHashMap();
+            fileMap.put("uri",targetFileName);
+            fileMap.put("url",url);
+            return ServerResponse.createBySuccess(fileMap);
+        }else{
+            return ServerResponse.createByErrorMessage("无权限操作");
+        }
+    }
 }
