@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Service("IProductService")
+@Service("iProductService")
 public class IProductServiceImpl implements IProductService {
 
     @Autowired
