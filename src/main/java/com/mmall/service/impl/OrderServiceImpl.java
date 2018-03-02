@@ -208,7 +208,7 @@ public class OrderServiceImpl implements IOrderService {
     private void reduceProductStock(List<OrderItem> orderItemList){
         for(OrderItem orderItem : orderItemList){
             Product product = productMapper.selectByPrimaryKey(orderItem.getProductId());
-            product.setStock(product.getStock()-orderItem.getQuantity());
+            product.setStock(product.getStock() - orderItem.getQuantity());
             productMapper.updateByPrimaryKeySelective(product);
         }
     }
@@ -378,18 +378,6 @@ public class OrderServiceImpl implements IOrderService {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     public ServerResponse pay(Long orderNo,Integer userId,String path){
         Map<String ,String> resultMap = Maps.newHashMap();
         Order order = orderMapper.selectByUserIdAndOrderNo(userId,orderNo);
@@ -406,7 +394,7 @@ public class OrderServiceImpl implements IOrderService {
 
 
         // (必填) 订单标题，粗略描述用户的支付目的。如“xxx品牌xxx门店当面付扫码消费”
-        String subject = new StringBuilder().append("happymmall扫码支付,订单号:").append(outTradeNo).toString();
+        String subject = new StringBuilder().append("Tmall扫码支付,订单号:").append(outTradeNo).toString();
 
 
         // (必填) 订单总金额，单位为元，不能超过1亿元
@@ -529,7 +517,7 @@ public class OrderServiceImpl implements IOrderService {
         String tradeStatus = params.get("trade_status");
         Order order = orderMapper.selectByOrderNo(orderNo);
         if(order == null){
-            return ServerResponse.createByErrorMessage("非快乐慕商城的订单,回调忽略");
+            return ServerResponse.createByErrorMessage("非商城的订单,回调忽略");
         }
         if(order.getStatus() >= Const.OrderStatusEnum.PAID.getCode()){
             return ServerResponse.createBySuccess("支付宝重复调用");
