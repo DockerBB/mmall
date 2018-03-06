@@ -79,7 +79,7 @@ public class ProductManageController {
         return ServerResponse.createByErrorMessage("无权限操作");
     }
 
-    @RequestMapping(value = "set_sale_status.do",method = RequestMethod.POST)
+    @RequestMapping(value = "set_sale_status.do",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse setSaleStatus(HttpSession session, Integer productId,Integer status){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
