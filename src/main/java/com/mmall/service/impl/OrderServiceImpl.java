@@ -424,7 +424,7 @@ public class OrderServiceImpl implements IOrderService {
 
         // 业务扩展参数，目前可添加由支付宝分配的系统商编号(通过setSysServiceProviderId方法)，详情请咨询支付宝技术支持
         ExtendParams extendParams = new ExtendParams();
-        extendParams.setSysServiceProviderId("2088100200300400500");
+        extendParams.setSysServiceProviderId("2088102175333760");
 
 
 
@@ -451,6 +451,7 @@ public class OrderServiceImpl implements IOrderService {
                 .setTimeoutExpress(timeoutExpress)
                 .setNotifyUrl(PropertiesUtil.getProperty("alipay.callback.url"))//支付宝服务器主动通知商户服务器里指定的页面http路径,根据需要设置
                 .setGoodsDetailList(goodsDetailList);
+
 
 
         AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
