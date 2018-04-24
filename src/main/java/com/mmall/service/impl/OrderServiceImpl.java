@@ -413,7 +413,7 @@ public class OrderServiceImpl implements IOrderService {
         String sellerId = "";
 
         // 订单描述，可以对交易或商品进行一个详细地描述，比如填写"购买商品2件共15.00元"
-        String body = new StringBuilder().append("订单").append(outTradeNo).append("购买商品共").append(totalAmount).append("元").toString();
+        String body = new StringBuilder().append("订单").append(outTradeNo).append("购买书籍共").append(totalAmount).append("元").toString();
 
 
         // 商户操作员编号，添加此参数可以为商户操作员做销售统计
@@ -458,7 +458,6 @@ public class OrderServiceImpl implements IOrderService {
         switch (result.getTradeStatus()) {
             case SUCCESS:
                 logger.info("支付宝预下单成功: )");
-
                 AlipayTradePrecreateResponse response = result.getResponse();
                 dumpResponse(response);
 

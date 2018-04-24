@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -103,7 +103,7 @@ public class OrderController {
         return iOrderService.pay(orderNo,user.getId(),path);
     }
 
-    @RequestMapping("alipay_callback.do")
+    @RequestMapping(value = "alipay_callback.do",method = RequestMethod.POST)
     @ResponseBody
     public Object alipayCallback(HttpServletRequest request){
         Map<String,String> params = Maps.newHashMap();
@@ -117,13 +117,6 @@ public class OrderController {
 
                 valueStr = (i == values.length -1)?valueStr + values[i]:valueStr + values[i]+",";
             }
-
-            try {
-                valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
             params.put(name,valueStr);
         }
         logger.info("支付宝回调,sign:{},trade_status:{},参数:{}",params.get("sign"),params.get("trade_status"),params.toString());
@@ -141,7 +134,7 @@ public class OrderController {
             logger.error("支付宝验证回调异常",e);
         }
 
-
+        //todo 验证各种数据
 
 
         //
